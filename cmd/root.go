@@ -4,10 +4,24 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"bufio"
+	"fmt"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
+
+const asciiArt = `
+         ▄▄▄▄▄                                                              
+       ▄▀  ▄█▀▀ ▀▀▄        ▐██▀▀██ ██▀███     ██▀▀██▌███▀██ ███▀██ ▀██▀██▀
+     █▀█ ▐▌ ▄█▀▀█▄▐▌       ▐██  ▀▀ ██  ██     ██  ▀▀ ██▌ ██ ▐██ ██▌ ██  ▀
+    █  █ ▐█▀ ▀█▄▄ ▀█       ▐██ ▄█▄ ██▄▄██     ██     ██▌▌██ ▐██ ██▌ ████
+    ▀█ ▀▀█▌   █▌ █  █      ▐██ ▐██ ██  ██     ██  ▄█▌██▌ ██ ▐██ ██▌ ██ ▄▄
+     ▐▀▀▄▄▄█▀▀▐▌ █▄█▀      ▐██▄███ ██▄▄██     ██▄▄██ ███▄██ ▐██▄██▌▄██▄██▌
+      █▄   ▄▄▀▀ ▄█
+        ▀▀▀▀█▄▄▀▀
+`
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -21,7 +35,36 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+	Run: runInteractive,
+}
+
+func runInteractive(cmd *cobra.Command, args []string) {
+	fmt.Println(asciiArt)
+	fmt.Println("Welcome! Type text and I'll tell you its length.")
+	fmt.Println("Type 'quit' to exit.")
+	fmt.Println()
+
+	scanner := bufio.NewScanner(os.Stdin)
+
+	for {
+		fmt.Print("Enter text: ")
+		scanner.Scan()
+		input := strings.TrimSpace(scanner.Text())
+
+		if strings.ToLower(input) == "quit" {
+			fmt.Println("Goodbye!")
+			break
+		}
+
+		if input == "" {
+			fmt.Println("Please enter some text.")
+			continue
+		}
+
+		length := len(input)
+		fmt.Printf("Length: %d characters\n", length)
+		fmt.Println()
+	}
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
