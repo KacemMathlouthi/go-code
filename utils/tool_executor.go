@@ -30,7 +30,7 @@ func ExecuteTool(toolName string, toolArgs map[string]string) (string, error) {
 		return result, nil
 
 	case "list":
-		result, err := tools.List(toolArgs["path"])
+		result, err := tools.List()
 		if err != nil {
 			return "", fmt.Errorf("Error executing list command: %v", err)
 		}
