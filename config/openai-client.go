@@ -3,6 +3,7 @@ package config
 import (
 	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/openai/openai-go"
 	"github.com/openai/openai-go/azure"
 )
@@ -18,6 +19,7 @@ type AzureOpenAIConfig struct {
 }
 
 func loadEnvConfig() *AzureOpenAIConfig {
+	_ = godotenv.Load()
 	config := &AzureOpenAIConfig{
 		APIVersion:     os.Getenv("AZURE_API_VERSION"),
 		Endpoint:       os.Getenv("AZURE_ENDPOINT"),

@@ -9,6 +9,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/KacemMathlouthi/go-code/agent"
 	"github.com/spf13/cobra"
 )
 
@@ -39,7 +40,7 @@ to quickly create a Cobra application.`,
 }
 
 func runInteractive(cmd *cobra.Command, args []string) {
-	fmt.Println(asciiArt)
+	fmt.Print(asciiArt)
 	fmt.Println("Welcome! Type text and I'll tell you its length.")
 	fmt.Println("Type 'quit' to exit.")
 	fmt.Println()
@@ -47,7 +48,7 @@ func runInteractive(cmd *cobra.Command, args []string) {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for {
-		fmt.Print("Enter text: ")
+		fmt.Print("> ")
 		scanner.Scan()
 		input := strings.TrimSpace(scanner.Text())
 
@@ -61,8 +62,12 @@ func runInteractive(cmd *cobra.Command, args []string) {
 			continue
 		}
 
-		length := len(input)
-		fmt.Printf("Length: %d characters\n", length)
+		output, err := agent.GetLlmResponse(input)
+		if err != nil {
+			fmt.Printf("Error: %v\n", err)
+			continue
+		}
+		fmt.Printf("Response: %s\n", output)
 		fmt.Println()
 	}
 }
