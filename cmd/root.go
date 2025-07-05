@@ -26,6 +26,13 @@ var rootCmd = &cobra.Command{
 }
 
 func runInteractive(cmd *cobra.Command, args []string) {
+	// Initialize logger
+	if err := utils.InitLogger(); err != nil {
+		fmt.Printf("Failed to initialize logger: %v\n", err)
+		os.Exit(1)
+	}
+	defer utils.CloseLogger()
+
 	utils.GetStartupText()
 	scanner := bufio.NewScanner(os.Stdin)
 	conversationHistory := []openai.ChatCompletionMessageParamUnion{}
@@ -61,6 +68,12 @@ func runInteractive(cmd *cobra.Command, args []string) {
 			continue
 		}
 
+		// Log user input
+		utils.LogInfo("User input received", "interaction", map[string]interface{}{
+			"input_length":        len(input),
+			"conversation_length": len(conversationHistory),
+		})
+
 		// Display user input in a formatted box
 		fmt.Println(utils.FormatUserInput(input))
 
@@ -69,6 +82,9 @@ func runInteractive(cmd *cobra.Command, args []string) {
 
 		output, err := agent.GetLlmResponseWithTools(conversationHistory)
 		if err != nil {
+			utils.LogError("LLM response failed", "interaction", map[string]interface{}{
+				"error": err.Error(),
+			})
 			fmt.Println(utils.FormatError(err.Error()))
 			continue
 		}

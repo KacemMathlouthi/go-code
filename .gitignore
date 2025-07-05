@@ -1,3 +1,4 @@
 .env
 main
 test.txt
+app.log
