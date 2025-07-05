@@ -1,5 +1,5 @@
 /*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
+Copyright © 2025 Kacem Mathlouthi <kacem.math47@gmail.com>
 */
 package cmd
 
