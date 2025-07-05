@@ -31,12 +31,12 @@ func runInteractive(cmd *cobra.Command, args []string) {
 	conversationHistory := []openai.ChatCompletionMessageParamUnion{}
 
 	for {
-		fmt.Print("> ")
+		fmt.Print(utils.FormatPrompt())
 		scanner.Scan()
 		input := strings.TrimSpace(scanner.Text())
 
 		if strings.ToLower(input) == "--quit" {
-			fmt.Println("Goodbye!")
+			fmt.Println(utils.ColorGreen + utils.ColorBold + "👋 Goodbye!" + utils.ColorReset)
 			break
 		}
 
@@ -52,31 +52,32 @@ func runInteractive(cmd *cobra.Command, args []string) {
 
 		if strings.ToLower(input) == "--clear" {
 			conversationHistory = []openai.ChatCompletionMessageParamUnion{}
-			// Clear the terminal screen
-			fmt.Print("\033[H\033[2J")
-			fmt.Println("Terminal cleared!")
-			fmt.Println()
+			utils.ClearScreen()
 			continue
 		}
 
 		if input == "" {
-			fmt.Println("Please enter some text.")
+			fmt.Println(utils.ColorYellow + "Please enter some text." + utils.ColorReset)
 			continue
 		}
+
+		// Display user input in a formatted box
+		fmt.Println(utils.FormatUserInput(input))
 
 		// Add user message to conversation history
 		conversationHistory = append(conversationHistory, openai.UserMessage(input))
 
 		output, err := agent.GetLlmResponseWithTools(conversationHistory)
 		if err != nil {
-			fmt.Printf("Error: %v\n", err)
+			fmt.Println(utils.FormatError(err.Error()))
 			continue
 		}
 
 		// Add assistant response to conversation history
 		conversationHistory = append(conversationHistory, openai.AssistantMessage(output))
 
-		fmt.Printf("Response: %s\n", output)
+		// Display AI response in a formatted box with markdown rendering
+		fmt.Println(utils.FormatAIResponse(output))
 		fmt.Println()
 	}
 }
