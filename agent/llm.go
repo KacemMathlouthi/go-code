@@ -26,7 +26,7 @@ func GetLlmResponse(user_prompt string) (string, error) {
 			openai.UserMessage(user_prompt),
 		},
 		Seed:  openai.Int(0),
-		Model: openai.ChatModelGPT4oMini,
+		Model: openai.ChatModelGPT4_1Mini,
 	}
 
 	completion, err := client.Chat.Completions.New(ctx, param)
@@ -59,7 +59,7 @@ func GetLlmResponseWithTools(conversationHistory []openai.ChatCompletionMessageP
 	params := openai.ChatCompletionNewParams{
 		Messages: messages,
 		Tools:    utils.ToolsDefinitions,
-		Model:    openai.ChatModelGPT4oMini,
+		Model:    openai.ChatModelGPT4_1Mini,
 	}
 
 	// Multi-step tool calling loop
