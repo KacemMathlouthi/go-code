@@ -62,7 +62,7 @@ func runInteractive(cmd *cobra.Command, args []string) {
 			continue
 		}
 
-		output, err := agent.GetLlmResponse(input)
+		output, err := agent.GetLlmResponseWithTools(input)
 		if err != nil {
 			fmt.Printf("Error: %v\n", err)
 			continue
