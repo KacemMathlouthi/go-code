@@ -51,7 +51,9 @@ func runInteractive(cmd *cobra.Command, args []string) {
 
 		if strings.ToLower(input) == "--clear" {
 			conversationHistory = []string{}
-			fmt.Println("Conversation history cleared!")
+			// Clear the terminal screen
+			fmt.Print("\033[H\033[2J")
+			fmt.Println("Terminal cleared!")
 			fmt.Println()
 			continue
 		}
