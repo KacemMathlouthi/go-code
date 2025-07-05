@@ -14,8 +14,15 @@ func GetLlmResponse(user_prompt string) (string, error) {
 	client := config.GetOpenAIClient()
 	ctx := context.Background()
 
+	// Get system prompt
+	systemPrompt, err := GetSystemPrompt()
+	if err != nil {
+		return "", fmt.Errorf("failed to get system prompt: %v", err)
+	}
+
 	param := openai.ChatCompletionNewParams{
 		Messages: []openai.ChatCompletionMessageParamUnion{
+			openai.SystemMessage(systemPrompt),
 			openai.UserMessage(user_prompt),
 		},
 		Seed:  openai.Int(0),
@@ -35,8 +42,15 @@ func GetLlmResponseWithTools(user_prompt string) (string, error) {
 	client := config.GetOpenAIClient()
 	ctx := context.Background()
 
+	// Get system prompt
+	systemPrompt, err := GetSystemPrompt()
+	if err != nil {
+		return "", fmt.Errorf("failed to get system prompt: %v", err)
+	}
+
 	params := openai.ChatCompletionNewParams{
 		Messages: []openai.ChatCompletionMessageParamUnion{
+			openai.SystemMessage(systemPrompt),
 			openai.UserMessage(user_prompt),
 		},
 		Tools: utils.ToolsDefinitions,
