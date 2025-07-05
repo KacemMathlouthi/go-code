@@ -64,6 +64,13 @@ func ExecuteTool(toolName string, toolArgs map[string]string) (string, error) {
 		}
 		return fmt.Sprintf("File at the path %v was succesfully written", toolArgs["path"]), nil
 
+	case "mkdir":
+		err := tools.Mkdir(toolArgs["path"])
+		if err != nil {
+			return "", fmt.Errorf("error creating directory: %v", err)
+		}
+		return fmt.Sprintf("Directory at the path %v was successfully created", toolArgs["path"]), nil
+
 	default:
 		return "", fmt.Errorf("tool %v not found", toolName)
 	}

@@ -130,4 +130,20 @@ var ToolsDefinitions = []openai.ChatCompletionToolParam{
 			},
 		},
 	},
+	{
+		Function: openai.FunctionDefinitionParam{
+			Name:        "mkdir",
+			Description: openai.String("Create a directory (and parent directories if needed) at the specified path."),
+			Parameters: openai.FunctionParameters{
+				"type": "object",
+				"properties": map[string]interface{}{
+					"path": map[string]interface{}{
+						"type":        "string",
+						"description": "The directory path to create (e.g., './new_folder', './parent/child').",
+					},
+				},
+				"required": []string{"path"},
+			},
+		},
+	},
 }
