@@ -10,57 +10,59 @@ import (
 	"strings"
 
 	"github.com/KacemMathlouthi/go-code/agent"
+	"github.com/KacemMathlouthi/go-code/utils"
 	"github.com/spf13/cobra"
 )
-
-const asciiArt = `
-         ▄▄▄▄▄                                                              
-       ▄▀  ▄█▀▀ ▀▀▄        ▐██▀▀██ ██▀███     ██▀▀██▌███▀██ ███▀██ ▀██▀██▀
-     █▀█ ▐▌ ▄█▀▀█▄▐▌       ▐██  ▀▀ ██  ██     ██  ▀▀ ██▌ ██ ▐██ ██▌ ██  ▀
-    █  █ ▐█▀ ▀█▄▄ ▀█       ▐██ ▄█▄ ██▄▄██     ██     ██▌▌██ ▐██ ██▌ ████
-    ▀█ ▀▀█▌   █▌ █  █      ▐██ ▐██ ██  ██     ██  ▄█▌██▌ ██ ▐██ ██▌ ██ ▄▄
-     ▐▀▀▄▄▄█▀▀▐▌ █▄█▀      ▐██▄███ ██▄▄██     ██▄▄██ ███▄██ ▐██▄██▌▄██▄██▌
-      █▄   ▄▄▀▀ ▄█
-        ▀▀▀▀█▄▄▀▀
-`
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "go-code",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
+	Short: "A coding agent in the terminal.",
+	Long: `A Coding Agent in the terminal. 
+	The agent can execute shell commands, read and write files, and more. 
+	It can contribute to your codebase by writing code, fixing bugs, and more.`,
 	Run: runInteractive,
 }
 
 func runInteractive(cmd *cobra.Command, args []string) {
-	fmt.Print(asciiArt)
-	fmt.Println("Welcome! Type text and I'll tell you its length.")
-	fmt.Println("Type 'quit' to exit.")
-	fmt.Println()
-
+	utils.GetStartupText()
 	scanner := bufio.NewScanner(os.Stdin)
+	conversationHistory := []string{}
 
 	for {
 		fmt.Print("> ")
 		scanner.Scan()
 		input := strings.TrimSpace(scanner.Text())
 
-		if strings.ToLower(input) == "quit" {
+		if strings.ToLower(input) == "--quit" {
 			fmt.Println("Goodbye!")
 			break
+		}
+
+		if strings.ToLower(input) == "--help" {
+			utils.GetHelpText()
+			continue
+		}
+
+		if strings.ToLower(input) == "--config" {
+			utils.GetConfigText()
+			continue
+		}
+
+		if strings.ToLower(input) == "--clear" {
+			conversationHistory = []string{}
+			fmt.Println("Conversation history cleared!")
+			fmt.Println()
+			continue
 		}
 
 		if input == "" {
 			fmt.Println("Please enter some text.")
 			continue
 		}
+
+		// Add input to conversation history
+		conversationHistory = append(conversationHistory, input)
 
 		output, err := agent.GetLlmResponseWithTools(input)
 		if err != nil {

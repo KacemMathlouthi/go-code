@@ -18,7 +18,7 @@ type AzureOpenAIConfig struct {
 	DeploymentName string
 }
 
-func loadEnvConfig() *AzureOpenAIConfig {
+func LoadEnvConfig() *AzureOpenAIConfig {
 	_ = godotenv.Load()
 	config := &AzureOpenAIConfig{
 		APIVersion:     os.Getenv("AZURE_API_VERSION"),
@@ -30,7 +30,7 @@ func loadEnvConfig() *AzureOpenAIConfig {
 }
 
 func GetOpenAIClient() *openai.Client {
-	config := loadEnvConfig()
+	config := LoadEnvConfig()
 
 	if openAIClient == nil {
 		client := openai.NewClient(
