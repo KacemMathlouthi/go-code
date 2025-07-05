@@ -11,6 +11,7 @@ import (
 
 	"github.com/KacemMathlouthi/go-code/agent"
 	"github.com/KacemMathlouthi/go-code/utils"
+	"github.com/openai/openai-go"
 	"github.com/spf13/cobra"
 )
 
@@ -27,7 +28,7 @@ var rootCmd = &cobra.Command{
 func runInteractive(cmd *cobra.Command, args []string) {
 	utils.GetStartupText()
 	scanner := bufio.NewScanner(os.Stdin)
-	conversationHistory := []string{}
+	conversationHistory := []openai.ChatCompletionMessageParamUnion{}
 
 	for {
 		fmt.Print("> ")
@@ -50,7 +51,7 @@ func runInteractive(cmd *cobra.Command, args []string) {
 		}
 
 		if strings.ToLower(input) == "--clear" {
-			conversationHistory = []string{}
+			conversationHistory = []openai.ChatCompletionMessageParamUnion{}
 			// Clear the terminal screen
 			fmt.Print("\033[H\033[2J")
 			fmt.Println("Terminal cleared!")
@@ -63,14 +64,18 @@ func runInteractive(cmd *cobra.Command, args []string) {
 			continue
 		}
 
-		// Add input to conversation history
-		conversationHistory = append(conversationHistory, input)
+		// Add user message to conversation history
+		conversationHistory = append(conversationHistory, openai.UserMessage(input))
 
-		output, err := agent.GetLlmResponseWithTools(input)
+		output, err := agent.GetLlmResponseWithTools(conversationHistory)
 		if err != nil {
 			fmt.Printf("Error: %v\n", err)
 			continue
 		}
+
+		// Add assistant response to conversation history
+		conversationHistory = append(conversationHistory, openai.AssistantMessage(output))
+
 		fmt.Printf("Response: %s\n", output)
 		fmt.Println()
 	}

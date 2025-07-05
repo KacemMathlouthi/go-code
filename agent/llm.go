@@ -38,7 +38,7 @@ func GetLlmResponse(user_prompt string) (string, error) {
 	return completion.Choices[0].Message.Content, nil
 }
 
-func GetLlmResponseWithTools(user_prompt string) (string, error) {
+func GetLlmResponseWithTools(conversationHistory []openai.ChatCompletionMessageParamUnion) (string, error) {
 	client := config.GetOpenAIClient()
 	ctx := context.Background()
 
@@ -48,13 +48,18 @@ func GetLlmResponseWithTools(user_prompt string) (string, error) {
 		return "", fmt.Errorf("failed to get system prompt: %v", err)
 	}
 
+	// Build messages array with system prompt and conversation history
+	messages := []openai.ChatCompletionMessageParamUnion{
+		openai.SystemMessage(systemPrompt),
+	}
+
+	// Add conversation history (which should already include the current user message)
+	messages = append(messages, conversationHistory...)
+
 	params := openai.ChatCompletionNewParams{
-		Messages: []openai.ChatCompletionMessageParamUnion{
-			openai.SystemMessage(systemPrompt),
-			openai.UserMessage(user_prompt),
-		},
-		Tools: utils.ToolsDefinitions,
-		Model: openai.ChatModelGPT4oMini,
+		Messages: messages,
+		Tools:    utils.ToolsDefinitions,
+		Model:    openai.ChatModelGPT4oMini,
 	}
 
 	// Make initial chat completion request
