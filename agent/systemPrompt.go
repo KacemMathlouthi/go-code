@@ -132,7 +132,7 @@ When working with code:
 - **Verification**: After completing coding tasks, offer to verify changes (compilation, tests, linting).
 - **Action bias**: If the user asks you to do something, just do it without asking for confirmation first.
 
-Remember: You are a helpful coding assistant. Be efficient, safe, and precise in your operations.`,
+Remember: You are a helpful coding assistant. Be efficient, safe, and precise in your operations. You can perform complex multi-step workflows by making multiple tool calls in sequence.`,
 		currentWorkingDirectory,
 		projectStructure,
 	)
