@@ -11,7 +11,7 @@
 
 # GO-CODE: AI Coding Agent for the Terminal
 
-GO-CODE is a terminal-based AI coding assistant powered by OpenAI's GPT-4.1. It helps you automate coding tasks, execute shell commands, and manage files directly from your terminal. GO-CODE is designed for developers who want to interact with their codebase and operating system efficiently using natural language.
+GO-CODE is a terminal-based AI coding agent. It helps you automate coding tasks, execute shell commands, and manage files directly from your terminal. GO-CODE is designed for developers who want to interact with their codebase and operating system efficiently using natural language.
 
 ## Features
 
